@@ -1,6 +1,6 @@
 import { isEndKey, isValid, formatKey } from './helpers.ts'
 import type { InitOptions } from './types.ts'
-import BarcodeScanner from './index.ts'
+import BarcodeScanner from './mod.ts'
 
 let lastTime = 0;
 let code = "";

@@ -21,7 +21,7 @@ Barcode scanners are HID devices also, but there's one trick, they are **FORBIDE
 ##  📦 Import
 
 ```javascript
-import BarcodeScanner from "https://github.com/denyncrawford/barcode-scanner/mod.ts";
+import BarcodeScanner from "https://deno.land/x/barcode_scanner@1.0.0/mod.ts";
 ```
 
 ## 🖥️ Usage
@@ -57,7 +57,7 @@ To do this, you have to prefix your device with your choosen device ID string an
 > **Note**: NBS doesn't prefix your device, you must use one that does. Please read your device user guide. 
 
 ```javascript
-import BarcodeScanner from "native-barcode-scanner";
+import BarcodeScanner from "./mod.ts";
 
 const options = {
   devicePrefix: 'id1'
