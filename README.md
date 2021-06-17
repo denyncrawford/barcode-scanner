@@ -6,9 +6,9 @@ Most barcode scanners act like a keyboard, Barcode Scanner handles this by liste
 
 ### Why?
 
-I needed a way to use multiple scanners on a PC without depending on one window being foused. It is not viable / reliable to use on GUIs and browser runing on machines used by several users at time.
+I needed a way to use multiple scanners on a PC without depending on one window being focused. It is not viable / reliable to use on GUIs and browser running on machines used by several users at time.
 
-**Don't be scare!** Barcode Scanner is pretty simple too and it can be used with a sigle scanner on a simple app :D, but with the security that data is not getting lost anymore.
+**Don't be scare!** Barcode Scanner is pretty simple too and it can be used with a single scanner on a simple app :D, but with the security that data is not getting lost anymore.
 
 ### How?
 
@@ -40,11 +40,12 @@ const options = {...foo}
 const scanner = new BarcodeScanner(options);
 
 // Add a global listener
-scanner.on('code', code => {
-  console.log(code);
-});
 
-// Remove the listener
+for await (const code of scanner.reader()) {
+  console.log(code)
+}
+
+// Stop the listener
 scanner.off();
 ```
 
@@ -52,7 +53,7 @@ scanner.off();
 
 As I said before, some devices allow code prefixing functions and you can use it to scope the NBS events.
 
-To do this, you have to prefix your device with your choosen device ID string and then specify it at `options.devicePrefix`.
+To do this, you have to prefix your device with your chosen device ID string and then specify it at `options.devicePrefix`.
 
 > **Note**: NBS doesn't prefix your device, you must use one that does. Please read your device user guide. 
 
@@ -66,16 +67,32 @@ const options = {
 const scanner = new BarcodeScanner(options);
 
 // Add a global device scoped listener
-scanner.on('code', code => {
-  // This only works for the device(s) prefixed with id1
-  console.log(code);
-});
-
+for await (const code of scanner.reader()) {
+  // This only works for the device(s) prefixed with id
+  console.log(code)
+}
 // Remove the listener
 scanner.off();
 ```
 
 > **Note**: We un-prefix the code for you ;) you can log it as clean as it is on the paper.
+
+# EventEmitter API deprecation
+
+**Please note** that node and browser versións uses an EventEmitter like API, it is deprecated now and we are aiming the usage of Deno's way. It is compatible just with the deno stream API, out of the box. **If you want to use it as before (with the events API) you must see the next example**:
+
+```typescript
+import Readable from 'https://deno.land/std@0.99.0/node/_stream/readable.ts';
+import BarcodeScanner from '../mod.ts'
+
+const scanner = Readable.from(new BarcodeScanner({
+  endKeys: ['Intro', 'Enter']
+}).reader());
+
+scanner.on('data', (code: string) => {
+  console.log(code)
+});
+```
 
 # 🧰 API
 
@@ -116,20 +133,13 @@ Returns **Scanner**
 
 ### Scanner
 
-- #### on
+- #### reader
 
-  Starts listening for barcode scans and add/replace the listener
-
-  **Parameters**
-
-  - eventName **string** Event string must be `code`
-
-  - handler **Function** Function to call on completion of barcode scan
-
-    _Recieves the scanned code of the last input as parametes_
+  **Async iterator**: Starts listening for barcode scans.
 
 - #### off
-  Stop listening for barcode scans and remove the listener
+
+  Stop listening for barcode scans and remove the listener.
   
 # 🌐 Using on web and node
 

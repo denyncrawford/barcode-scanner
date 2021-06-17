@@ -1,15 +1,12 @@
-import EventEmitter from 'https://deno.land/x/eventemitter@1.2.1/mod.ts';
 import type { InitOptions, Inner, Options } from './types.ts'
 import { wildcard } from 'https://deno.land/x/gkm@1.0.0/mod.ts';
-import _enventHandler from './eventHandler.ts'
+import _eventHandler from './eventHandler.ts'
 
 /**
  * @class Represents the Scanner instance.
  */
 
-export default class BarcodeScanner extends EventEmitter <{
-  code (key: string): void
-  }>{
+export default class BarcodeScanner {
   
   options: InitOptions = {
     latency: 50,
@@ -33,9 +30,7 @@ export default class BarcodeScanner extends EventEmitter <{
  */
 
   constructor(options: { [K in keyof Options]?: Inner<Options[K]> } = {}) {
-    super()
     Object.assign(this.options, options);
-    this.initHandler()
   }
 
   /**
@@ -44,11 +39,10 @@ export default class BarcodeScanner extends EventEmitter <{
    * @returns {void} void.
    */
 
-  initHandler = async () => {
+  async * reader() {
     this.state = true;
-    const enventHandler = _enventHandler.bind(this, this.options)
     for await (const evt of wildcard('key.pressed')) {
-      if (this.state) enventHandler(evt.data)
+      if (this.state) yield * _eventHandler(this.options, evt.data)
     }
   }
 
@@ -58,7 +52,7 @@ export default class BarcodeScanner extends EventEmitter <{
  * @returns {void} void
  */
 
-  kill() {
+  off() {
     this.state = false;
   }
 

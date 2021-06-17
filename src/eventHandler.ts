@@ -1,12 +1,11 @@
 import { isEndKey, isValid, formatKey } from './helpers.ts'
 import type { InitOptions } from './types.ts'
-import BarcodeScanner from './mod.ts'
 
 let lastTime = 0;
 let code = "";
 let uppercase = false;
 
-export default function (this: BarcodeScanner, options: InitOptions, key: string)  {
+export default function* (options: InitOptions, key: string)  {
 
  // Prepare event
 
@@ -42,10 +41,10 @@ export default function (this: BarcodeScanner, options: InitOptions, key: string
     if (isEndKey(endKeys, key)) {
       // End of barcode
       if (code.length >= minLength && !devicePrefix) {
-        this.emit('code', code);
+        yield code;
       } else if (code.length >= minLength && devicePrefix) {
         // Check for device prefix
-        if (code.includes(devicePrefix)) this.emit("code", code.slice(devicePrefix.length))
+        if (code.includes(devicePrefix)) yield code.slice(devicePrefix.length);
       }
     }
     // Invalid scan, reset
