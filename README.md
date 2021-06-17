@@ -21,7 +21,7 @@ Barcode scanners are HID devices also, but there's one trick, they are **FORBIDE
 ##  📦 Import
 
 ```javascript
-import BarcodeScanner from "https://github.com/denyncrawford/deno-barcode-scanner/mod.ts";
+import BarcodeScanner from "https://github.com/denyncrawford/barcode-scanner/mod.ts";
 ```
 
 ## 🖥️ Usage
