@@ -1,5 +1,5 @@
 import type { InitOptions, Inner, Options } from './types.ts'
-import { wildcard } from 'https://deno.land/x/gkm@1.0.0/mod.ts';
+import { wildcard } from 'https://deno.land/x/gkm@1.1.0/mod.ts';
 import _eventHandler from './eventHandler.ts'
 
 /**
@@ -11,7 +11,7 @@ export default class BarcodeScanner {
   options: InitOptions = {
     latency: 50,
     minLength: 3,
-    endKeys: ['Enter'],
+    endKeys: ['Return'],
     validKey: /^\w$/,
     devicePrefix: null
   };
@@ -41,8 +41,8 @@ export default class BarcodeScanner {
 
   async * reader() {
     this.state = true;
-    for await (const evt of wildcard('key.pressed')) {
-      if (this.state) yield * _eventHandler(this.options, evt.data)
+    for await (const evt of wildcard('key.press')) {
+      if (this.state) yield * _eventHandler(this.options, evt.data.value)
     }
   }
 

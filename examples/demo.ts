@@ -1,7 +1,7 @@
 import BarcodeScanner from '../mod.ts'
 
 const scanner = new BarcodeScanner({
-  endKeys: 'Intro'
+  endKeys: 'Return'
 });
 
 let count = 0;

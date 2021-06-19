@@ -14,9 +14,7 @@ I needed a way to use multiple scanners on a PC without depending on one window 
 
 Barcode scanners are HID devices also, but there's one trick, they are **FORBIDEN** by some systems... Basically they doesn't allow HID connections for keyboards and mouses for security reasons. So while looking for a solution I found that it is not that useful and we can't take a direct connection from the device. 
 
-**So, how it is native?** Well, this is the bittersweet part: **We use Java and [GKM](https://github.com/denyncrawford/deno-gkm)** to capture native/global keys and keybindings events, and yeah... **you have to install Java** :/ but it is not that hard :B (I mean, probably you have it already installed, you know... minecraft). This is because neither Node or Deno support native events for keyboards and mices. Anyway, it is incredibly fast as well. 
-
-> I'm currently looking for a Rust solution. If you want to contribute with a native way to listen to key events and pipe them to JS please make a PR :D.
+**So, how it is native?**: **We use [GKM](https://github.com/denyncrawford/deno-gkm)** to capture native/global keys and keybindings events. This is because neither Node or Deno support native events for keyboards and mouses. Anyway, it is incredibly fast as well. 
 
 ##  📦 Import
 
@@ -115,7 +113,7 @@ Creates an instance of Scanner to use the code events.
 
     Refer [Key Values | MDN](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values)
 
-    _default: `["Enter"]`_
+    _default: `["Return"]`_
 
   - `validKey` **RegExp** Regular expression to check for a valid key in barcode
 
@@ -127,19 +125,18 @@ Creates an instance of Scanner to use the code events.
 
     _default: `null`
 
-  > **Please note**: `options.endKeys` must be in the os default language, if you know that your app will run in machines with multiple languages you must add those endKeys into the array. Eg: `['Intro', 'Enter', ...]`.
+  > **Please note**: `options.endKeys` is always "Return", if you know that your device or one of them have a different endKey, you must add those endKeys into the array. Eg: `['L', 'F1', ...]`.
 
 Returns **Scanner**
 
 ### Scanner
 
-- #### reader
+- `reader` **Async iterator**: Starts listening for barcode scans.
+  
+  _yields: Event Object
 
-  **Async iterator**: Starts listening for barcode scans.
-
-- #### off
-
-  Stop listening for barcode scans and remove the listener.
+- `off` **Function**: Stop listening for barcode scans and remove the listener.
+  _returns: `void`
   
 # 🌐 Using on web and node
 
